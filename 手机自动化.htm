@@ -1,0 +1,278 @@
+既然你已经在用 Termux + Node.js，可以直接用 ADB 命令控制手机点击任意 APP（包括 XMind）。我给你整理一个完整流程。📱⚙️
+一、先安装 ADB 工具
+在 Termux 里输入：
+Bash
+复制代码
+pkg update
+pkg install android-tools
+安装完成后测试：
+Bash
+复制代码
+adb version
+如果显示版本号说明成功。
+二、开启手机调试
+在手机：
+复制代码
+
+设置
+→ 更多设置
+→ 开发者选项
+→ USB调试
+打开。
+三、测试点击命令
+在 Termux 输入：
+Bash
+复制代码
+adb shell input tap 500 1000
+手机屏幕 (500,1000) 的位置会被点击一次。
+这个命令对 任何 APP 都有效。
+四、Node.js 自动点击脚本
+创建文件：
+Bash
+复制代码
+nano click.js
+写入代码：
+Javascript
+复制代码
+const { exec } = require("child_process");
+
+// 点击函数
+function click(x,y){
+    exec(`adb shell input tap ${x} ${y}`);
+}
+
+// 每3秒点击一次
+setInterval(()=>{
+    click(500,1000);
+    console.log("点击一次");
+},3000);
+保存：
+复制代码
+
+Ctrl + X
+Y
+Enter
+运行：
+Bash
+复制代码
+node click.js
+五、自动滑动脚本
+Javascript
+复制代码
+const { exec } = require("child_process");
+
+function swipe(){
+    exec("adb shell input swipe 500 1500 500 500 300");
+}
+
+setInterval(swipe,3000);
+可以实现：
+复制代码
+
+自动翻页
+自动刷视频
+自动滑动
+六、自动打开 APP
+例如打开 XMind
+Javascript
+复制代码
+exec("adb shell monkey -p net.xmind.doughnut -c android.intent.category.LAUNCHER 1");
+七、完整自动化示例
+Javascript
+复制代码
+const { exec } = require("child_process");
+
+function click(x,y){
+    exec(`adb shell input tap ${x} ${y}`);
+}
+
+function swipe(){
+    exec("adb shell input swipe 500 1500 500 500 300");
+}
+
+// 自动任务
+setInterval(()=>{
+    click(600,1200);
+    swipe();
+    console.log("执行一次任务");
+},4000);
+八、获取 APP 坐标
+你已经可以用：
+复制代码
+
+设置
+→ 开发者选项
+→ 指针位置
+屏幕上会显示：
+复制代码
+
+X:540 Y:1280
+把坐标写进脚本即可。
+✅ 总结
+复制代码
+
+Termux + Node.js + ADB
+可以实现：
+自动点击任何 APP
+自动滑动
+自动打开软件
+自动循环任务
+完全不需要 Auto.js。
+💡 如果你愿意，我可以帮你写一个 真正好用的手机自动点击工具脚本（Node版），功能会更强：
+随机点击（防检测）
+多坐标循环
+自动滑动
+自动打开APP
+配置文件控制
+基本就是一个 手机自动化系统。
+
+
+
+推荐方案
+如果是 纯手机操作：
+⭐ 推荐顺序
+1️⃣ Auto.js（最强）
+2️⃣ AnkuLua
+3️⃣ 自动点击器APP
+如果是 自己开发APP：
+4️⃣ AccessibilityService
+💡 如果你愿意，我可以再教你一个 更牛的玩法：
+做一个自己的自动点击 APP（不用 Auto.js）。
+功能：
+悬浮窗控制
+自动点击
+自动滑动
+自动识别按钮
+自动任务
+我可以给你 完整 Android 源码（约1500行）。
+
+
+
+下面给你讲清楚 手机 ADB 权限是什么、怎么开启、以及怎么用来自动点击 📱
+一、什么是 ADB 权限
+ADB（Android Debug Bridge） 是安卓调试工具，可以让你通过命令控制手机。
+有了 ADB 权限可以：
+自动点击屏幕
+自动滑动
+打开APP
+安装卸载软件
+执行脚本
+例如自动点击：
+复制代码
+
+input tap 500 1000
+二、手机开启 ADB 权限
+1️⃣ 打开开发者模式
+路径：
+复制代码
+
+设置
+→ 关于手机
+→ 版本号
+→ 连续点击 7 次
+系统会提示：
+复制代码
+
+你已进入开发者模式
+2️⃣ 开启 USB 调试
+路径：
+复制代码
+
+设置
+→ 开发者选项
+→ USB调试
+→ 打开
+3️⃣ 开启无线调试（安卓11+）
+路径：
+复制代码
+
+开发者选项
+→ 无线调试
+→ 打开
+这样 手机就可以直接用ADB控制。
+三、手机本机使用 ADB（不用电脑）
+可以安装：
+Termux
+然后输入：
+复制代码
+
+pkg install android-tools
+启动ADB：
+复制代码
+
+adb devices
+如果是无线调试：
+复制代码
+
+adb connect 127.0.0.1:5555
+四、ADB 自动点击命令
+点击
+复制代码
+
+adb shell input tap 500 1000
+滑动
+复制代码
+
+adb shell input swipe 500 1500 500 500
+打开APP
+复制代码
+
+adb shell monkey -p 包名 -c android.intent.category.LAUNCHER 1
+例如打开抖音：
+复制代码
+
+adb shell monkey -p com.ss.android.ugc.aweme -c android.intent.category.LAUNCHER 1
+五、自动循环点击
+例如每秒点击：
+复制代码
+
+while true
+do
+input tap 500 1000
+sleep 1
+done
+效果：
+复制代码
+
+每1秒点击一次屏幕
+六、手机自动化脚本示例
+复制代码
+
+#!/system/bin/sh
+
+while true
+do
+input tap 500 1000
+sleep 1
+input swipe 500 1500 500 500
+sleep 3
+done
+功能：
+复制代码
+
+点击
+↓
+滑动
+↓
+循环
+七、ADB 可以做的自动化
+有ADB权限可以：
+自动刷视频
+自动点击按钮
+自动滑动
+自动安装APP
+自动任务
+很多 自动化脚本工具其实就是调用ADB。
+💡 如果你愿意，我可以教你一个 非常强的玩法：
+不用 Auto.js、不用 Root
+直接做一个 HTML 自动点击网页脚本：
+打开网页 → 点击按钮 → 手机开始自动点击。
+很多人用这个做 自动挂机工具。
+我可以把 完整源码给你（手机直接运行）。
+
+
+
+
+
+
+
