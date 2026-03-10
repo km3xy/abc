@@ -2,7 +2,11 @@
  
 官网地址
  
-- 主域名：https://f-droid.org/（支持HTTPS，全球通用）
+- 主域名：https://f-droid.org/
+-
+-
+-
+- （支持HTTPS，全球通用）
 ​
 - 客户端APK直链（官方签名）：https://f-droid.org/F-Droid.apk
 ​
