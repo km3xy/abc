@@ -2,6 +2,10 @@
 📱 手机端 AutoX 内置编辑器（无独立插件商店）
  
 AutoX 手机端没有单独的插件商店，增强靠这两种方式：
+
+
+https://github.com/aiselp/AutoX/releases
+
  
 1. 内置增强脚本
 ​
